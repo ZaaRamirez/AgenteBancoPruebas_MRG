@@ -1,0 +1,6 @@
+# Una sola subtarea, igual a las demostraciones de arrg-unam/omx_pick_hidroferol.
+id: HID
+perfil: empaquetado_medicamentos
+parametros:
+  items: {Hidroferol: 1}
+  destination: brown box

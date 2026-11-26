@@ -1,0 +1,8 @@
+# Ensayo = tarea concreta + parametros. Se ejecuta con  agente ejecutar -e medicamentos_basico
+id: MED
+perfil: empaquetado_medicamentos
+solicitante: "Dr. Garcia"
+parametros:
+  items: {Hidroferol: 1, Paracetamol: 2}
+  destination: brown box
+repeticiones: 1

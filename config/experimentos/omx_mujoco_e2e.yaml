@@ -1,0 +1,39 @@
+#  REFERENCIA extremo a extremo: MolmoAct2 solo recibe la tarea completa; el
+#  mismo VLM verifica el resultado.  agente ejecutar -x omx_mujoco_e2e -e omx_hidroferol
+nombre: omx_mujoco_e2e
+modo: extremo_a_extremo              # modular | extremo_a_extremo
+
+modelos:                      # nombres de config/modelos.yaml
+  llm: ""                    # no se usa en este modo
+  vlm: gemma4
+  vla: molmoact2_omx
+
+entorno:
+  tipo: ros2                  # simulado | ros2
+  robot: omx                  # config/robots/omx.yaml
+  usar_tiempo_sim: true
+  espera_datos_s: 15
+
+razonamiento:
+  salida_estructurada: json   # none | json | schema
+  max_reintentos_formato: 2   # reconsultas si la salida no es valida
+
+percepcion:
+  salida_estructurada: json
+  verificar_subtareas: true
+  # camaras: [front]          # vacio = todas
+
+ejecucion:
+  umbral_estable: 3.0         # unidades de la accion (grados)
+  ciclos_estables: 20
+  min_pasos: 10
+  max_duracion_s: 90          # por subtarea
+  max_duracion_extremo_s: 300 # tarea completa en modo extremo a extremo
+  registrar_cada: 0           # >0: guarda estado/accion cada N pasos
+
+agente:
+  max_reintentos: 3           # por subtarea (articulo: hasta tres)
+  max_llamadas_llm: 60
+
+registro:
+  guardar_imagenes: true      # true: guarda lo que vio el VLM en cada consulta

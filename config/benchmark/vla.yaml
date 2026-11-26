@@ -1,0 +1,69 @@
+# =============================================================================
+#  BENCHMARK DE LA CAPA DE EJECUCION (VLA)
+#  A) fuera de linea:  python3 -m benchmark vla-offline -c vla
+#     el VLA ve las observaciones GRABADAS y se compara su accion con la del operador
+#  B) lazo cerrado:    python3 -m benchmark vla-lazo -c vla
+#     el VLA mueve el robot (gemelo MuJoCo o fisico) y se juzga si cumplio la tarea
+# =============================================================================
+
+# Modelos a comparar (seccion vla de config/modelos.yaml). "postura_prueba" sirve
+# como referencia trivial (siempre la misma postura): todo VLA debe superarla.
+modelos: [molmoact2_omx, postura_prueba]
+
+robot: omx                     # config/robots/omx.yaml: vector de accion, unidades y pinza
+
+# ---------------------------------------------------------------- A) fuera de linea
+offline:
+  fuente: "lerobot:arrg-unam/omx_pick_hidroferol"   # o lerobot:<repo>@<carpeta local>, o npz:<carpeta>
+  camara_conjunto: observation.images.front         # clave de la imagen en el conjunto
+  camara_robot: front                               # nombre de la camara que espera el modelo
+  episodios: {ultimos: 0.2}     # episodios de PRUEBA: idealmente no usados para entrenar
+                                # (tambien "0-49", [3, 7, 9] o "todos")
+  paso: 1                       # 1 = todos los fotogramas (recomendado: politica con cola de acciones)
+  tolerancia_grados: 5.0        # una accion articular "acierta" si todos sus errores son menores
+  umbral_pinza: 40.0            # unidades de accion: mayor = cerrada (OMX: 0-80)
+  # sensibilidad al lenguaje: mismas observaciones con otra redaccion de la instruccion
+  instrucciones_alternativas:
+    - "Grab the {object} and put it in the {destination}"
+    - "Place the {object} inside the {destination}"
+  episodios_lenguaje: 5         # cuantos episodios se repiten con cada redaccion
+
+# ---------------------------------------------------------------- B) lazo cerrado
+lazo:
+  entorno: {tipo: ros2, robot: omx, usar_tiempo_sim: true, espera_datos_s: 20}
+  instrucciones:
+    - instruccion: "Pick up the Hidroferol and place it inside the brown box"
+      objeto: Hidroferol
+      destino: brown box
+  # redacciones adicionales de cada instruccion (robustez al lenguaje en ejecucion)
+  parafrasis:
+    - "Put the {object} in the {destination}"
+  # escenas iniciales: se recorren en orden y se repiten para CADA modelo, asi los
+  # ensayos quedan pareados (mismo arreglo de objetos para todos los modelos)
+  escenas:
+    - "objeto al centro del estante"
+    - "objeto a la izquierda del estante"
+    - "objeto a la derecha del estante"
+    - "objeto al centro, con un distractor junto"
+    - "objeto girado 45 grados"
+  ensayos_por_escena: 4         # 5 escenas x 4 = 20 ensayos por instruccion y redaccion
+  max_duracion_s: 90
+  detector: {umbral_estable: 3.0, ciclos_estables: 20, min_pasos: 10}
+  reinicio:
+    modo: manual                # manual (Enter) | servicio (ROS 2) | ninguno
+    servicio: /reset_scene      # std_srvs/srv/Trigger o std_srvs/srv/Empty
+    tipo: Trigger
+    espera_s: 2.0
+  juez:
+    modo: manual                # manual (el operador califica) | pose (simulador) | vlm | detector
+    # pose: el simulador publica geometry_msgs/PoseStamped del objeto; exito = dentro de la caja
+    topico_pose: "/mujoco/objects/{object}/pose"
+    region_destino: {x: [0.20, 0.35], y: [-0.10, 0.10], z: [0.00, 0.15]}
+    # vlm: un VLM del catalogo juzga con la pregunta del agente (NO es verdad de referencia)
+    modelo_vlm: gemma4
+
+rapido:
+  episodios: "0-1"
+  max_fotogramas: 40
+  ensayos_por_escena: 1
+  max_escenas: 2

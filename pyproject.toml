@@ -1,0 +1,18 @@
+# Opcional: "pip install -e . --no-deps" instala el comando "agente" en el entorno
+# activo. Con "source entorno.sh" no hace falta instalar nada.
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agente-fundacional"
+version = "0.2.0"
+description = "Banco de pruebas del agente fundacional modular (LLM + VLM + VLA)"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pyyaml", "requests", "pillow"]
+
+[project.scripts]
+agente = "agente.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["agente*"]

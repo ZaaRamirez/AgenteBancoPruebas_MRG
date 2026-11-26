@@ -1,0 +1,50 @@
+# =============================================================================
+#  PEDIDOS REALES (convertidos de comanda.xlsx). Si cambias comanda.xlsx, vuelve a
+#  generar este archivo con:  python3 -m benchmark comandas comanda.xlsx
+#  Los usan el benchmark LLM (casos y episodios) y el ensayo comandas_reales.
+# =============================================================================
+destino: brown box
+pedidos:
+- id: N001
+  solicitante: Juan Lopez
+  items:
+    Aspirina: 3
+    Blaxitec: 4
+    Diotul: 2
+    Hidroferol: 5
+    Laritol: 3
+    Tylenol: 2
+- id: N002
+  solicitante: Maria Paredes
+  items:
+    Aspirina: 4
+    Blaxitec: 3
+    Hidroferol: 2
+    Laritol: 1
+    Tylenol: 2
+- id: N003
+  solicitante: Carlos Castro
+  items:
+    Aspirina: 2
+    Blaxitec: 2
+    Diotul: 4
+    Hidroferol: 3
+    Laritol: 5
+    Tylenol: 1
+- id: N004
+  solicitante: Jazmin Benitez
+  items:
+    Aspirina: 3
+    Laritol: 1
+    Blaxitec: 2
+- id: N005
+  solicitante: Laura Palmer
+  items:
+    Aspirina: 4
+    Laritol: 2
+    Tylenol: 3
+- id: N006
+  solicitante: Pedro Paramo
+  items:
+    Diotul: 1
+    Blaxitec: 2

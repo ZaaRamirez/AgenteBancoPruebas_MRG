@@ -1,0 +1,7 @@
+# Orden de la prueba de LLM del articulo (Seccion V-B): seis medicamentos, cantidades distintas.
+id: MED6
+perfil: empaquetado_medicamentos
+solicitante: "Dr. Garcia"
+parametros:
+  items: {Hidroferol: 1, Paracetamol: 2, Ibuprofeno: 3, Omeprazol: 1, Loratadina: 2, Amoxicilina: 1}
+  destination: brown box

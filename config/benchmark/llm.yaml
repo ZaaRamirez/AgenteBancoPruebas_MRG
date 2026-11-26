@@ -1,0 +1,75 @@
+# =============================================================================
+#  BENCHMARK DE LA CAPA DE RAZONAMIENTO (LLM)
+#  python3 -m benchmark llm-casos     -c llm     (decisiones aisladas con respuesta conocida)
+#  python3 -m benchmark llm-episodios -c llm     (tareas completas en lazo cerrado)
+#  Todo lo que cambia el resultado esta aqui y se copia a la carpeta de la corrida.
+# =============================================================================
+
+# Modelos a comparar (nombres de config/modelos.yaml o "ollama:<modelo>").
+# "guion" es la referencia: decide siempre bien; sirve para validar el banco.
+modelos: [guion, qwen3.8, deepseek-r1, gemma4]
+
+# Mismos parametros de inferencia para TODOS los modelos (comparacion justa).
+# Sobrescriben lo que diga config/modelos.yaml solo durante el benchmark.
+parametros_comunes:
+  max_tokens: 4096          # los modelos que razonan (<think>) necesitan margen
+  timeout_s: 600
+  num_ctx: 8192             # contexto suficiente para pedidos grandes
+  seed: 2026                # reproducibilidad en Ollama
+
+calentamiento: true         # una llamada sin medir por modelo (carga en GPU fuera de la latencia)
+
+# Condiciones = combinaciones de parametros bajo las que se mide cada modelo.
+condiciones:
+  - nombre: json_t0         # como lo usara el agente: JSON forzado, determinista
+    salida_estructurada: json
+    temperature: 0.0
+    repeticiones: 1
+  - nombre: libre_t0        # sin forzar formato: ¿sigue el formato del prompt por si mismo?
+    salida_estructurada: none
+    temperature: 0.0
+    repeticiones: 1
+  - nombre: json_t07        # muestreo: estabilidad de la decision (mismo caso varias veces)
+    salida_estructurada: json
+    temperature: 0.7
+    repeticiones: 3
+  # Opcional para modelos que razonan (qwen3, deepseek-r1, gpt-oss): sin bloque <think>.
+  # Ollama ignora "think" en modelos que no lo soportan.
+  # - nombre: json_t0_sin_razonar
+  #   salida_estructurada: json
+  #   temperature: 0.0
+  #   think: false
+  #   repeticiones: 1
+
+# ---- Casos de decision (una llamada al LLM por caso, con respuesta correcta conocida)
+casos:
+  semilla: 2026             # misma semilla -> mismos casos para todos los modelos
+  por_categoria: 60         # 12 categorias x 60 = 720 casos por condicion y repeticion
+  objetos: objetos          # config/benchmark/objetos.yaml
+  comandas: comandas        # config/benchmark/comandas.yaml (pedidos reales)
+
+# ---- Episodios: la tarea completa con el agente real (percepcion = oraculo de escena,
+#      ejecucion simulada). Mide si el LLM lleva la tarea hasta el final.
+episodios:
+  semilla: 2026
+  pedidos_generados: 24     # ademas de los pedidos reales de comandas.yaml
+  instrucciones_generales: 24
+  repeticiones: 3
+  temperature: 0.0
+  salida_estructurada: json
+  condiciones:
+    - nombre: nominal       # todas las subtareas salen bien
+      tasa_exito: 1.0
+    - nombre: fallos_30     # 30 % de las subtareas fallan (mismos fallos para todos)
+      tasa_exito: 0.7
+  distractores: 2           # medicamentos en el estante que NO estan en el pedido
+  max_reintentos: 3
+  max_llamadas_llm: 80
+
+# Perfil rapido para comprobar que todo funciona antes de la corrida larga:
+#   python3 -m benchmark llm-casos -c llm --rapido
+rapido:
+  por_categoria: 5
+  pedidos_generados: 2
+  instrucciones_generales: 2
+  repeticiones_maximas: 1

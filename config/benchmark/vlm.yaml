@@ -1,0 +1,44 @@
+# =============================================================================
+#  BENCHMARK DE LA CAPA DE PERCEPCION (VLM)
+#  1) construir el conjunto etiquetado:  python3 -m benchmark vlm-datos ...   (ver BENCHMARK.md)
+#  2) medir:                             python3 -m benchmark vlm -c vlm
+# =============================================================================
+
+# Modelos a comparar (config/modelos.yaml). Deben aceptar imagenes.
+modelos: [gemma4, qwen2.5vl]
+#   otros candidatos: qwen3-vl, internvl3.5 (agregalos al catalogo) y molmoact2_vlm (transformers)
+
+parametros_comunes:
+  temperature: 0.0
+  max_tokens: 1024
+  timeout_s: 600
+calentamiento: true
+
+# Conjuntos etiquetados (datos/vlm/<nombre>). Se evaluan todos juntos.
+conjuntos: [omx_hidroferol]
+
+# De donde salen las preguntas: el MISMO perfil de tarea que usa el agente.
+perfil_tarea: empaquetado_medicamentos
+
+# Variantes de pregunta (parafrasis). "perfil" = la pregunta exacta del agente.
+# Una respuesta que cambia con la redaccion indica fragilidad del modelo.
+preguntas:
+  verificacion:
+    - perfil
+    - "Look at the image. Is there a {object} box inside the {destination}?"
+    - "The robot tried to put the {object} into the {destination}. According to the image, did it succeed?"
+  inventario:
+    - perfil
+    - "Count the medicine boxes visible in the image for each of these names: {items_names}. Give the count and where each one is."
+
+salida_estructurada: json        # json | schema | none (igual que en el agente)
+
+# Perturbaciones de imagen (robustez). Ver benchmark/vlm/perturbaciones.py
+perturbaciones: [original, brillo_bajo, brillo_alto, contraste_bajo, desenfoque, ruido, jpeg_bajo, recorte, media_resolucion]
+
+repeticiones: 1                  # >1 solo si temperature > 0
+
+rapido:
+  max_casos: 12
+  perturbaciones: [original, desenfoque]
+  max_preguntas: 2

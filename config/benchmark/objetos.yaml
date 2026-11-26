@@ -1,0 +1,18 @@
+# =============================================================================
+#  VOCABULARIO de los casos generados del benchmark LLM.
+#  Medicamentos: los de comanda.xlsx (los que existen en la estacion).
+# =============================================================================
+medicamentos: [Aspirina, Blaxitec, Diotul, Hidroferol, Laritol, Tylenol]
+# medicamentos que NO se piden pero pueden aparecer en el estante (distractores)
+medicamentos_distractores: [Paracetamol, Ibuprofeno, Omeprazol, Loratadina, Amoxicilina]
+destino_medicamentos: brown box
+cantidad_maxima: 5
+
+# Instrucciones libres (perfil manipulacion_general)
+objetos: [banana, apple, red cube, blue cube, green cup, orange, sponge, marker, yellow ball, toy car]
+destinos: [bowl, box, tray, plate, basket, left side of the table, right side of the table]
+verbos:
+  - "Put the {o} in the {d}"
+  - "Move the {o} to the {d}"
+  - "Place the {o} into the {d}"
+  - "Take the {o} and leave it in the {d}"

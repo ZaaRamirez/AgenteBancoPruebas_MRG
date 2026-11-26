@@ -1,0 +1,69 @@
+#  PERFIL DE TAREA: manipulacion general con instruccion libre
+#  Ejemplo de que la arquitectura no depende de la tarea: sin conteo; el LLM
+#  descompone la instruccion, pide observaciones cuando las necesita y decide
+#  cuando termina; una verificacion final de la percepcion confirma la tarea.
+#  Parametros opcionales: cualquiera (se muestran al LLM).
+
+name: manipulacion_general
+description: Resolver una instruccion de manipulacion libre en la mesa de trabajo.
+
+instruction_template: "{instruction}"
+role: >-
+  You are the reasoning layer of a robot agent with one or more arms and a camera.
+  Break the user's instruction into simple manipulation subtasks that the robot
+  can execute one at a time. Ask the perception layer when you need to know
+  something about the scene. When the instruction is satisfied, answer done.
+
+tracker:
+  type: none
+auto_complete: false
+
+initial_observation:
+  question: >-
+    Describe the objects on the workspace relevant to this instruction: "{instruction}".
+    List each object with its position in the image.
+  schema:
+    type: object
+    properties:
+      objects:
+        type: array
+        items:
+          type: object
+          properties:
+            name: {type: string}
+            location: {type: string}
+          required: [name]
+      description: {type: string}
+    required: [objects]
+
+skills:
+  - name: pick_and_place
+    description: Pick up one object and place it at a location.
+    arguments:
+      object: object to pick
+      destination: where to place it
+    instruction_template: "Pick up the {object} and place it in the {destination}"
+    verify:
+      question: "Is the {object} now in the {destination}?"
+      schema: {type: object, properties: {success: {type: boolean}, reason: {type: string}}, required: [success]}
+  - name: vla_instruction
+    description: Send any other short manipulation instruction directly to the robot policy.
+    arguments:
+      instruction: short imperative instruction in English
+    instruction_template: "{instruction}"
+    verify:
+      question: "The robot was asked to: \"{instruction}\". Was it done?"
+      schema: {type: object, properties: {success: {type: boolean}, reason: {type: string}}, required: [success]}
+
+final_check:
+  question: 'The robot was asked to: "{instruction}". Look at the image: is the whole instruction satisfied?'
+  schema: {type: object, properties: {success: {type: boolean}, reason: {type: string}}, required: [success]}
+
+# Plan que sigue el LLM "scripted" (pruebas sin modelo)
+scripted_plan:
+  - action: pick_and_place
+    arguments: {object: "{object}", destination: "{destination}"}
+
+limits:
+  max_retries: 2
+  max_llm_calls: 30

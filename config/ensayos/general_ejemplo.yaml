@@ -1,0 +1,10 @@
+# Varias tareas libres con el perfil general (otra tarea, mismos nodos).
+tareas:
+  - id: GEN-A
+    perfil: manipulacion_general
+    instruccion: "Put the banana in the bowl"
+    parametros: {object: banana, destination: bowl}
+  - id: GEN-B
+    perfil: manipulacion_general
+    instruccion: "Move the red cube to the left side of the table"
+    parametros: {object: red cube, destination: left side of the table}

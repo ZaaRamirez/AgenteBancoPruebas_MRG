@@ -1,0 +1,28 @@
+nombre: sim_completo
+modo: modular
+modelos:
+  llm: guion
+  vlm: simulado_70
+  vla: simulado_70
+entorno:
+  tipo: simulado
+  robot: omx
+  tiempo_real: false
+razonamiento:
+  salida_estructurada: json
+  max_reintentos_formato: 2
+percepcion:
+  salida_estructurada: json
+  verificar_subtareas: true
+ejecucion:
+  umbral_estable: 3.0
+  ciclos_estables: 20
+  min_pasos: 10
+  max_duracion_s: 90
+  max_duracion_extremo_s: 300
+  registrar_cada: 0
+agente:
+  max_reintentos: 3
+  max_llamadas_llm: 60
+registro:
+  guardar_imagenes: false

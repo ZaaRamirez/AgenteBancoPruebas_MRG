@@ -1,0 +1,78 @@
+#  PERFIL DE TAREA: empaquetado de pedidos de medicamentos
+#  rol del LLM, habilidades,
+#  consultas a la percepcion y seguimiento del estado. Los nodos no cambian.
+#  Parametros que espera la tarea (los da el ensayo o la capa de interaccion):
+#    items:        {nombre_medicamento: cantidad}
+#    destination:  donde se colocan (p. ej. "brown box")
+#    requester:    medico que hace el pedido (opcional)
+#  Variables en plantillas: {items}, {items_text}, {items_names}, {items_as_list},
+#  {destination}, cualquier otro parametro y los argumentos de la habilidad.
+
+name: empaquetado_medicamentos
+description: Surtir un pedido colocando cada unidad solicitada en la caja de destino.
+
+instruction_template: "Pack this medication order into the {destination}: {items_text}"
+e2e_instruction_template: "Pick up {items_text} and place them inside the {destination}"
+
+role: >-
+  You are the reasoning layer of a robot agent that packs medication orders.
+  The robot can pick ONE box at a time from the shelf and place it in the destination.
+  Plan one subtask at a time until every requested unit is placed.
+
+# Seguimiento que lleva el nodo: unidades por medicamento.
+tracker:
+  type: counts
+  parameter: items          # parametro con {elemento: cantidad}
+  argument: object          # argumento de la habilidad que indica el elemento
+  skills: [pick_and_place]
+  inventory_field: items    # campo de la observacion inicial con [{name, count}]
+auto_complete: true         # el nodo cierra la tarea cuando el conteo se completa
+
+# Antes de planear: ¿estan disponibles los medicamentos del pedido?
+initial_observation:
+  question: >-
+    Look at the shelf in the image. For each of these medicines: {items_names},
+    say how many boxes you can see and where they are (left, center, right, top, bottom).
+  schema:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            name: {type: string}
+            count: {type: integer}
+            location: {type: string}
+          required: [name, count]
+    required: [items]
+  check_with_tracker: true  # si faltan unidades -> CANNOT_COMPLETE (faltante)
+  # respuesta del VLM simulado: todo disponible
+  simulated_answer: '{{"items": {items_as_list}}}'
+
+skills:
+  - name: pick_and_place
+    description: Pick ONE box of a medicine from the shelf and place it in the destination.
+    arguments:
+      object: medicine name exactly as written in the order
+      destination: where to place it
+    defaults:
+      destination: "{destination}"
+    # instruccion en lenguaje natural para el VLA (igual que en el conjunto de datos)
+    instruction_template: "Pick up the {object} and place it inside the {destination}"
+    verify:
+      question: >-
+        The robot was asked to: "Pick up the {object} and place it inside the {destination}".
+        Look at the image: is a {object} box now inside the {destination}?
+      schema:
+        type: object
+        properties:
+          success: {type: boolean}
+          reason: {type: string}
+        required: [success]
+
+allow_observe: true
+final_check: null
+limits:
+  max_retries: 3            # reintentos por subtarea (articulo: hasta tres)
+  max_llm_calls: 60

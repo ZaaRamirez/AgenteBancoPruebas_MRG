@@ -1,0 +1,57 @@
+corrida,tarea,capa,modelo,indicador,valor,desv,n,unidad,definicion
+llm_real__deepseek-r1+simulado+simulado,,razonamiento,deepseek-r1,formato_valido,1.0,0.0,84,fraccion,respuestas con JSON y campo action
+llm_real__deepseek-r1+simulado+simulado,,razonamiento,deepseek-r1,decision_valida,1.0,0.0,84,fraccion,"acciones aplicables: habilidad existente, argumentos completos, coherente con el estado"
+llm_real__deepseek-r1+simulado+simulado,,razonamiento,deepseek-r1,errores_de_estado,0.0,0.0,84,fraccion,"repetir lo ya hecho, terminar antes de tiempo o inventar elementos"
+llm_real__deepseek-r1+simulado+simulado,,razonamiento,deepseek-r1,latencia_s,0.8439875890952148,0.674358834625884,84,s,tiempo por consulta
+llm_real__deepseek-r1+simulado+simulado,,percepcion,simulado,formato_valido,1.0,0.0,89,fraccion,respuestas que cumplen el esquema pedido
+llm_real__deepseek-r1+simulado+simulado,,percepcion,simulado,latencia_s,1.0566224712041975e-05,3.787828192672667e-06,89,s,tiempo por consulta
+llm_real__deepseek-r1+simulado+simulado,,percepcion,simulado,latencia_observacion_inicial_s,2.7159998353454284e-06,1.5068886144403251e-06,5,s,
+llm_real__deepseek-r1+simulado+simulado,,percepcion,simulado,latencia_pregunta_llm_s,1.4141264754845692e-05,1.989387918541966e-06,34,s,
+llm_real__deepseek-r1+simulado+simulado,,percepcion,simulado,latencia_verificacion_s,8.920219970605103e-06,2.2489033096130628e-06,50,s,
+llm_real__deepseek-r1+simulado+simulado,,percepcion,simulado,positivos_verificacion,1.0,0.0,50,fraccion,veredictos de exito (sin referencia NO es exactitud)
+llm_real__deepseek-r1+simulado+simulado,,ejecucion,simulado,fin_detectado,1.0,0.0,50,fraccion,ejecuciones que terminaron por estabilidad (no por tiempo o error)
+llm_real__deepseek-r1+simulado+simulado,,ejecucion,simulado,duracion_s,0.0005455446243286132,9.26600940715126e-05,50,s,tiempo por ejecucion
+llm_real__deepseek-r1+simulado+simulado,,ejecucion,simulado,pasos,23.26,0.6575712889109439,50,pasos,
+llm_real__deepseek-r1+simulado+simulado,,ejecucion,simulado,latencia_inferencia_s,1.6232425472707302e-06,3.321297250045806e-07,50,s,tiempo medio por paso de control
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,exito_tarea,1.0,0.0,5,fraccion,
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,no_realizable,0.0,0.0,5,fraccion,precondicion no cumplida (p. ej. faltante)
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,tiempo_tarea_s,14.193535614013673,1.8954363698392154,5,s,
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,reintentos,0.0,0.0,5,por tarea,
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,subtareas,10.0,0.0,5,por tarea,
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,llamadas_llm,16.8,4.069397989875161,5,por tarea,
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,progreso,1.0,0.0,5,fraccion,elementos completados segun el seguimiento del agente
+llm_real__deepseek-r1+simulado+simulado,,agente,llm:deepseek-r1 + vla:simulado + vlm:simulado,subtareas_exitosas,1.0,0.0,50,fraccion,subtareas confirmadas entre intentadas
+llm_real__gemma4+simulado+simulado,,razonamiento,gemma4,formato_valido,0.9818181818181818,0.133608531424537,55,fraccion,respuestas con JSON y campo action
+llm_real__gemma4+simulado+simulado,,razonamiento,gemma4,decision_valida,0.9090909090909091,0.28747978728803447,55,fraccion,"acciones aplicables: habilidad existente, argumentos completos, coherente con el estado"
+llm_real__gemma4+simulado+simulado,,razonamiento,gemma4,errores_de_estado,0.07407407407407407,0.261891400439462,54,fraccion,"repetir lo ya hecho, terminar antes de tiempo o inventar elementos"
+llm_real__gemma4+simulado+simulado,,razonamiento,gemma4,latencia_s,1.3112438873272616,3.8042732585811723,55,s,tiempo por consulta
+llm_real__gemma4+simulado+simulado,,percepcion,simulado,formato_valido,1.0,0.0,55,fraccion,respuestas que cumplen el esquema pedido
+llm_real__gemma4+simulado+simulado,,percepcion,simulado,latencia_s,7.845181822962001e-06,2.362438372444026e-06,55,s,tiempo por consulta
+llm_real__gemma4+simulado+simulado,,percepcion,simulado,latencia_observacion_inicial_s,1.7196000044350512e-06,2.531008950050893e-07,5,s,
+llm_real__gemma4+simulado+simulado,,percepcion,simulado,latencia_verificacion_s,8.457740004814696e-06,1.4160924319933594e-06,50,s,
+llm_real__gemma4+simulado+simulado,,percepcion,simulado,positivos_verificacion,1.0,0.0,50,fraccion,veredictos de exito (sin referencia NO es exactitud)
+llm_real__gemma4+simulado+simulado,,ejecucion,simulado,fin_detectado,1.0,0.0,50,fraccion,ejecuciones que terminaron por estabilidad (no por tiempo o error)
+llm_real__gemma4+simulado+simulado,,ejecucion,simulado,duracion_s,0.0005204963684082031,0.00010283526624121042,50,s,tiempo por ejecucion
+llm_real__gemma4+simulado+simulado,,ejecucion,simulado,pasos,23.26,0.6575712889109439,50,pasos,
+llm_real__gemma4+simulado+simulado,,ejecucion,simulado,latencia_inferencia_s,1.5351812845103643e-06,2.492406605802025e-07,50,s,tiempo medio por paso de control
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,exito_tarea,1.0,0.0,5,fraccion,
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,no_realizable,0.0,0.0,5,fraccion,precondicion no cumplida (p. ej. faltante)
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,tiempo_tarea_s,14.435649108886718,11.352533113181483,5,s,
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,reintentos,0.0,0.0,5,por tarea,
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,subtareas,10.0,0.0,5,por tarea,
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,llamadas_llm,11.0,0.6324555320336759,5,por tarea,
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,progreso,1.0,0.0,5,fraccion,elementos completados segun el seguimiento del agente
+llm_real__gemma4+simulado+simulado,,agente,llm:gemma4 + vla:simulado + vlm:simulado,subtareas_exitosas,1.0,0.0,50,fraccion,subtareas confirmadas entre intentadas
+llm_real__qwen3.8+simulado+simulado,,razonamiento,qwen3.8,formato_valido,0.0,0.0,15,fraccion,respuestas con JSON y campo action
+llm_real__qwen3.8+simulado+simulado,,razonamiento,qwen3.8,decision_valida,0.0,0.0,15,fraccion,"acciones aplicables: habilidad existente, argumentos completos, coherente con el estado"
+llm_real__qwen3.8+simulado+simulado,,razonamiento,qwen3.8,latencia_s,0.9137412992668033,0.18340619449807097,15,s,tiempo por consulta
+llm_real__qwen3.8+simulado+simulado,,percepcion,simulado,formato_valido,1.0,0.0,5,fraccion,respuestas que cumplen el esquema pedido
+llm_real__qwen3.8+simulado+simulado,,percepcion,simulado,latencia_s,3.138000101898797e-06,1.2332877321338724e-06,5,s,tiempo por consulta
+llm_real__qwen3.8+simulado+simulado,,percepcion,simulado,latencia_observacion_inicial_s,3.138000101898797e-06,1.2332877321338724e-06,5,s,
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,exito_tarea,0.0,0.0,5,fraccion,
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,no_realizable,0.0,0.0,5,fraccion,precondicion no cumplida (p. ej. faltante)
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,tiempo_tarea_s,2.744162654876709,0.14186370294188622,5,s,
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,reintentos,0.0,0.0,5,por tarea,
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,subtareas,0.0,0.0,5,por tarea,
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,llamadas_llm,3.0,0.0,5,por tarea,
+llm_real__qwen3.8+simulado+simulado,,agente,llm:qwen3.8 + vla:simulado + vlm:simulado,progreso,0.0,0.0,5,fraccion,elementos completados segun el seguimiento del agente

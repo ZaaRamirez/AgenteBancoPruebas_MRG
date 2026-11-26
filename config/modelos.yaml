@@ -1,0 +1,88 @@
+#  CATALOGO DE MODELOS POR CAPA
+#  Cada experimento elige un nombre de la izquierda por capa:
+#       --llm qwen3.8   --vlm gemma4   --vla molmoact2_omx
+#  Para evaluar un modelo nuevo basta con agregar una entrada aqui.
+#  Tambien sin catalogo:  --llm ollama:llama3.2:3b
+#  Las variables ${...} vienen de config/rutas.env.
+#
+#  Backends:   llm: ollama | openai | guion
+#              vlm: ollama | openai | transformers | simulado
+#              vla: lerobot | postura | simulado
+#  (o una clase propia "paquete.modulo:Clase" que cumpla agente/interfaces.py)
+#
+llm:
+  guion:                 # sin modelo: linea base determinista y pruebas sin GPU
+    backend: guion
+  qwen3.8:
+    backend: ollama
+    model: "qwen3.8:latest"
+    url: "${OLLAMA_URL}"
+    temperature: 0.3
+    max_tokens: 1024
+  deepseek-r1:
+    backend: ollama
+    model: "deepseek-r1:latest"
+    url: "${OLLAMA_URL}"
+    temperature: 0.3
+    max_tokens: 4096     # razona en <think> antes de responder
+  gemma4:
+    backend: ollama
+    model: "gemma4:26b"
+    url: "${OLLAMA_URL}"
+    temperature: 0.3
+    max_tokens: 1024
+  # qwen3-vllm:          # ejemplo de servidor con API compatible con OpenAI
+  #   backend: openai
+  #   model: "Qwen/Qwen3-8B"
+  #   url: "http://localhost:8000/v1"
+
+vlm:
+  simulado:
+    backend: simulado
+    tasa_exito: 1.0
+  simulado_70:           # 30 % de las verificaciones salen negativas
+    backend: simulado
+    tasa_exito: 0.7
+  simulado_faltante:     # el inventario inicial solo ve 1 Hidroferol (prueba "no realizable")
+    backend: simulado
+    respuestas:
+      observacion_inicial: {items: [{name: Hidroferol, count: 1, location: left}]}
+  gemma4:
+    backend: ollama
+    model: "gemma4:26b"
+    url: "${OLLAMA_URL}"
+    temperature: 0.0
+  qwen2.5vl:
+    backend: ollama
+    model: "qwen2.5vl:7b"
+    url: "${OLLAMA_URL}"
+    temperature: 0.0
+  molmoact2_vlm:         # backbone VLM de MolmoAct2 (necesita torch/transformers)
+    backend: transformers
+    model: "${MOLMO_VLM_PATH}"
+    dtype: bfloat16
+    max_tokens: 512
+
+vla:
+  simulado:
+    backend: simulado
+    tasa_exito: 1.0
+  simulado_70:           # 30 % de las subtareas no terminan (fallo de ejecucion)
+    backend: simulado
+    tasa_exito: 0.7
+  postura_prueba:        # postura fija: comprueba topicos, unidades y pinza del robot
+    backend: postura
+    objetivo: [0, 20, 30, -20, 0, 40]
+  molmoact2_omx:         # necesita torch + LeRobot (PY_ENV_ACTIVATE)
+    backend: lerobot
+    checkpoint: "${MOLMO_OMX_CKPT}"
+    policy_class: "lerobot.policies.molmoact2.modeling_molmoact2:MolmoAct2Policy"
+    camaras: {observation.images.front: front}     # clave LeRobot -> camara del robot
+    state_key: observation.state
+    select_action_kwargs: {inference_action_mode: continuous}
+  molmoact2_so101:
+    backend: lerobot
+    checkpoint: "${MOLMO_SO101_CKPT}"
+    policy_class: "lerobot.policies.molmoact2.modeling_molmoact2:MolmoAct2Policy"
+    camaras: {observation.images.front: front}
+    select_action_kwargs: {inference_action_mode: continuous}

@@ -1,0 +1,37 @@
+#  PLATAFORMA BIMANUAL SO-101 (fisica, construida).  PLANTILLA: ajusta nombres
+#  de articulacion, topicos y rangos de pinza a su driver ROS 2 y al orden del
+#  vector de accion de su conjunto de datos (LeRobot bimanual: brazo izquierdo
+#  0-5 y derecho 6-11). El gemelo MuJoCo bimanual debera usar estos mismos topicos.
+
+nombre: so101_bimanual
+hz: 10
+camaras:
+  front: /front_camera/color
+  # wrist_left: /left_wrist_camera/color
+  # wrist_right: /right_wrist_camera/color
+estado_articular: /joint_states
+brazos:
+  - nombre: izquierdo
+    articulaciones: [left_shoulder_pan, left_shoulder_lift, left_elbow_flex, left_wrist_flex, left_wrist_roll]
+    indices_accion: [0, 5]
+    unidades: grados
+    trayectoria: /left_arm_controller/joint_trajectory
+    duracion_punto_ms: 150
+    pinza:
+      articulacion: left_gripper
+      indice_accion: 5
+      rango_accion: [0.0, 100.0]
+      rango_comando: [0.0, 1.0]
+      accion: /left_gripper_controller/gripper_cmd
+  - nombre: derecho
+    articulaciones: [right_shoulder_pan, right_shoulder_lift, right_elbow_flex, right_wrist_flex, right_wrist_roll]
+    indices_accion: [6, 11]
+    unidades: grados
+    trayectoria: /right_arm_controller/joint_trajectory
+    duracion_punto_ms: 150
+    pinza:
+      articulacion: right_gripper
+      indice_accion: 11
+      rango_accion: [0.0, 100.0]
+      rango_comando: [0.0, 1.0]
+      accion: /right_gripper_controller/gripper_cmd

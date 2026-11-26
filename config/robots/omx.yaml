@@ -1,0 +1,26 @@
+#  PLATAFORMA OMX de un brazo (lider-seguidor).
+#  Hoy: gemelo en MuJoCo. Cuando se construya la plataforma fisica, su driver
+#  (ros2_control) debe publicar/aceptar los MISMOS topicos y este archivo no cambia.
+#  Nombres y unidades confirmados en molmo_ros_bridge.py.
+
+nombre: omx
+hz: 10                                   # frecuencia del bucle de control del VLA
+camaras:                                 # nombre -> topico sensor_msgs/Image
+  front: /front_camera/color
+estado_articular: /joint_states          # sensor_msgs/JointState (radianes)
+brazos:
+  - nombre: omx
+    articulaciones: [Shoulder_Rotation, Shoulder_Pitch, Elbow, Wrist_Pitch, Wrist_Roll]
+    indices_accion: [0, 5]               # posiciones [inicio, fin) en el vector de accion del VLA
+    unidades: grados                     # el conjunto de datos esta en grados
+    trayectoria: /main_controller/joint_trajectory          # trajectory_msgs/JointTrajectory
+    modo_comando: topico                 # topico | accion (si el brazo no se mueve, prueba accion)
+    accion_trayectoria: /main_controller/follow_joint_trajectory
+    duracion_punto_ms: 150               # sube a 300 si el movimiento es brusco
+    pinza:
+      articulacion: Gripper
+      indice_accion: 5
+      rango_accion: [0.0, 80.0]          # unidades del conjunto de datos
+      rango_comando: [0.0, 2.0]          # radianes del controlador
+      accion: /gripper_controller/gripper_cmd               # control_msgs/GripperCommand
+      esfuerzo_max: 100.0
